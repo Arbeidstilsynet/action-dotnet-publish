@@ -31,4 +31,4 @@ runs:
       working-directory: ${{ inputs.working-directory }}
       run: |
         dotnet pack -c Release
-        dotnet nuget push "./bin/Release/*.nupkg"
+        dotnet nuget push "./bin/Release/*.nupkg" --source "${{ inputs.source-url }}"
