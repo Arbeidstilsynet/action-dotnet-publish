@@ -1,32 +1,34 @@
-name: "No-op Action"
-author: "Arbeidstilsynet"
-description: "A no-op GitHub Action that echoes inputs and sets outputs."
+name: "Publish .NET NuGet Package"
+description: "Packs and publishes a .NET package to NuGet if not already published"
 
 inputs:
-  input-one:
-    description: "First input value"
+  working-directory:
+    description: "The directory to run dotnet commands in"
     required: true
-  input-two:
-    description: "Second input value"
-    required: false
-    default: "default-value"
-
-outputs:
-  output-one:
-    description: "Echo of input-one"
-    value: ${{ steps.noop.outputs.output-one }}
-  output-two:
-    description: "Echo of input-two"
-    value: ${{ steps.noop.outputs.output-two }}
+  nuget-auth-token:
+    description: "The NuGet auth token"
+    required: true
+  source-url:
+    description: "The source URL for the NuGet package feed"
+    default: "https://pkgs.dev.azure.com/Atil-utvikling/Public/_packaging/AT.Public.NuGet/nuget/v3/index.json"
+  dotnet-version:
+    description: "The version of dotnet to use"
+    default: "8.0.x"
 
 runs:
   using: "composite"
   steps:
-    - name: Echo inputs and set outputs
-      id: noop
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4
+      with:
+        dotnet-version: ${{ inputs.dotnet-version }}
+        source-url: ${{ inputs.source-url }}
+      env:
+        NUGET_AUTH_TOKEN: ${{ inputs.nuget-auth-token }}
+
+    - name: Pack and publish NuGet package
       shell: bash
+      working-directory: ${{ inputs.working-directory }}
       run: |
-        echo "input-one: ${{ inputs.input-one }}"
-        echo "input-two: ${{ inputs.input-two }}"
-        echo "output-one=${{ inputs.input-one }}" >> $GITHUB_OUTPUT
-        echo "output-two=${{ inputs.input-two }}" >> $GITHUB_OUTPUT
+        dotnet pack -c Release
+        dotnet nuget push "./bin/Release/*.nupkg"

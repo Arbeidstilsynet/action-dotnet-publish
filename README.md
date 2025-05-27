@@ -1,8 +1,6 @@
-# Arbeidstilsynet/action-noop
+# Arbeidstilsynet/action-dotnet-publish
 
-> **Note:** This is a template repository for creating simple composite GitHub Actions.
-
-A no-op GitHub Action that echoes inputs and sets outputs.
+A GitHub Action that packs and publishes a .NET package to a NuGet feed.
 
 ## Versioning
 
@@ -12,46 +10,29 @@ If you have to make breaking changes to the action, bump the version.
 
 ## Requirements
 
-- None
+- .NET project in the specified working directory
+- A valid NuGet API key (provided as a secret)
 
 ## Inputs
 
-| Name         | Description        | Required | Default         |
-|--------------|--------------------|----------|-----------------|
-| `input-one`  | First input value  | Yes      |                 |
-| `input-two`  | Second input value | No       | `default-value` |
-
-## Outputs
-
-| Name        | Description           |
-|-------------|-----------------------|
-| `output-one`| Echo of input-one     |
-| `output-two`| Echo of input-two     |
+| Name                | Description                               | Required | Default                                                                                           |
+|---------------------|-------------------------------------------|----------|---------------------------------------------------------------------------------------------------|
+| `working-directory` | The directory to run dotnet commands in   | Yes      |                                                                                                   |
+| `nuget-auth-token`  | The NuGet auth token                      | Yes      |                                                                                                   |
+| `source-url`        | The source URL for the NuGet package feed | No       | `https://pkgs.dev.azure.com/Atil-utvikling/Public/_packaging/AT.Public.NuGet/nuget/v3/index.json` |
+| `dotnet-version`    | The version of dotnet to use              | No       | `8.0.x`                                                                                           |
 
 ## Usage
 
 ```yaml
-name: Example No-op Action Usage
-
-on:
-  push:
-    branches:
-      - main
-
 jobs:
-  noop-job:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - uses: Arbeidstilsynet/action-noop@v1
-        id: noop
+      - uses: Arbeidstilsynet/action-dotnet-publish@v1
         with:
-          input-one: "Hello"
-          input-two: "World"
-
-      - name: Show outputs
-        run: |
-          echo "Output one: ${{ steps.noop.outputs.output-one }}"
-          echo "Output two: ${{ steps.noop.outputs.output-two }}"
+          working-directory: ./src/YourProject
+          nuget-auth-token: ${{ secrets.NUGET_AUTH_TOKEN }}
 ```
