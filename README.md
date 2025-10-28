@@ -21,6 +21,7 @@ If you have to make breaking changes to the action, bump the version.
 | `nuget-auth-token`  | The NuGet auth token                      | Yes      |                                                                                                   |
 | `source-url`        | The source URL for the NuGet package feed | No       | `https://pkgs.dev.azure.com/Atil-utvikling/Public/_packaging/AT.Public.NuGet/nuget/v3/index.json` |
 | `dotnet-version`    | The version of dotnet to use              | No       | `8.0.x`                                                                                           |
+| `config-file`       | Custom nuget.config location              | No       | `nuget.config` (at root)                                                                          |
 
 ## Usage
 

@@ -14,6 +14,8 @@ inputs:
   dotnet-version:
     description: "The version of dotnet to use"
     default: "8.0.x"
+  config-file:
+    description: 'Optional NuGet.config location, if your NuGet.config isn''t located in the root of the repo.'
 
 runs:
   using: "composite"
@@ -23,6 +25,7 @@ runs:
       with:
         dotnet-version: ${{ inputs.dotnet-version }}
         source-url: ${{ inputs.source-url }}
+        config-file: ${{ inputs.config-file }}
       env:
         NUGET_AUTH_TOKEN: ${{ inputs.nuget-auth-token }}
 
