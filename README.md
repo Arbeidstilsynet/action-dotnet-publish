@@ -24,9 +24,9 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: Arbeidstilsynet/action-dotnet-publish@v1
+      - uses: Arbeidstilsynet/action-dotnet-publish@v2
         with:
           working-directory: ./src/YourProject
           nuget-auth-token: ${{ secrets.NUGET_AUTH_TOKEN }}
