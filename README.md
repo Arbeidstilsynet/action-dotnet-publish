@@ -24,7 +24,7 @@ A GitHub Action that packs and publishes a .NET package to a NuGet feed. Support
 
 ### Trusted publishing (default)
 
-Publishes to nuget.org using OIDC — no API key needed. Requires [trusted publisher configuration](https://learn.microsoft.com/nuget/nuget-org/publish-a-package#publish-with-trusted-publishers) on nuget.org.
+Publishes to nuget.org using OIDC — no API key needed. Requires [trusted publisher configuration](https://learn.microsoft.com/nb-no/nuget/nuget-org/trusted-publishing) on nuget.org.
 
 ```yaml
 jobs:
@@ -39,7 +39,7 @@ jobs:
       - uses: Arbeidstilsynet/action-dotnet-publish@v3
         with:
           working-directory: ./src/YourProject
-          nuget-username: my-nuget-username
+          nuget-username: ${{ vars.NUGET_BOT_USERNAME }}
 ```
 
 ### Authenticated publishing
