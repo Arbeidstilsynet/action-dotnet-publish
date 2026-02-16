@@ -1,16 +1,20 @@
 name: "Publish .NET NuGet Package"
-description: "Packs and publishes a .NET package to NuGet if not already published"
+description: "Packs and publishes a .NET package to NuGet. Supports trusted publishing (OIDC) for nuget.org and authenticated publishing for other feeds."
 
 inputs:
   working-directory:
     description: "The directory to run dotnet commands in"
     required: true
+  use-trusted-publishing:
+    description: "Use OIDC-based trusted publishing for nuget.org. Requires 'permissions: id-token: write' on the job. Set to 'false' for authenticated publishing to other feeds."
+    default: "true"
+  nuget-username:
+    description: "A nuget.org username with trusted publishing configured. Required when use-trusted-publishing is 'true'."
   nuget-auth-token:
-    description: "The NuGet auth token"
-    required: true
+    description: "The NuGet auth token. Required when use-trusted-publishing is 'false'."
   source-url:
-    description: "The source URL for the NuGet package feed"
-    default: "https://pkgs.dev.azure.com/Atil-utvikling/Public/_packaging/AT.Public.NuGet/nuget/v3/index.json"
+    description: "The source URL for the NuGet package feed. Override this when publishing to a non-nuget.org feed."
+    default: "https://api.nuget.org/v3/index.json"
   dotnet-version:
     description: "The version of dotnet to use"
     default: "10.0.x"
@@ -20,7 +24,34 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Setup .NET SDK
+    # --- Trusted publishing path ---
+    - name: Setup .NET SDK (trusted publishing)
+      if: inputs.use-trusted-publishing == 'true'
+      uses: actions/setup-dotnet@baa11fbfe1d6520db94683bd5c7a3818018e4309 # v5
+      with:
+        dotnet-version: ${{ inputs.dotnet-version }}
+        config-file: ${{ inputs.config-file }}
+
+    - name: Login to NuGet with trusted publishing
+      if: inputs.use-trusted-publishing == 'true'
+      id: nuget-login
+      uses: NuGet/login@v1
+      with:
+        user: ${{ inputs.nuget-username }}
+
+    - name: Pack and publish NuGet package (trusted publishing)
+      if: inputs.use-trusted-publishing == 'true'
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        NUGET_API_KEY: ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
+      run: |
+        dotnet pack -c Release
+        dotnet nuget push "./bin/Release/*.nupkg" --api-key "$NUGET_API_KEY" --source "${{ inputs.source-url }}"
+
+    # --- Authenticated publishing path ---
+    - name: Setup .NET SDK (authenticated)
+      if: inputs.use-trusted-publishing != 'true'
       uses: actions/setup-dotnet@baa11fbfe1d6520db94683bd5c7a3818018e4309 # v5
       with:
         dotnet-version: ${{ inputs.dotnet-version }}
@@ -29,9 +60,10 @@ runs:
       env:
         NUGET_AUTH_TOKEN: ${{ inputs.nuget-auth-token }}
 
-    - name: Pack and publish NuGet package
+    - name: Pack and publish NuGet package (authenticated)
+      if: inputs.use-trusted-publishing != 'true'
       shell: bash
       working-directory: ${{ inputs.working-directory }}
       run: |
         dotnet pack -c Release
-        dotnet nuget push "./bin/Release/*.nupkg" -k ArbitraryName --source "${{ inputs.source-url }}"
+        dotnet nuget push "./bin/Release/*.nupkg" --api-key "${{ inputs.nuget-auth-token }}" --source "${{ inputs.source-url }}"
