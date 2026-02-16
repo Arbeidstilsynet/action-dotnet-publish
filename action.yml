@@ -15,7 +15,7 @@ inputs:
     description: "The NuGet auth token. Required when use-trusted-publishing is 'false'."
     required: false
   source-url:
-    description: "The source URL for the NuGet package feed. When use-trusted-publishing is 'false', this must be provided."
+    description: "The source URL for the NuGet package feed. Override this when publishing to a non-nuget.org feed."
     default: "https://api.nuget.org/v3/index.json"
   dotnet-version:
     description: "The version of dotnet to use"
