@@ -10,15 +10,15 @@ A GitHub Action that packs and publishes a .NET package to a NuGet feed. Support
 
 ## Inputs
 
-| Name                     | Description                                                                | Required | Default                               |
-|--------------------------|----------------------------------------------------------------------------|----------|---------------------------------------|
-| `working-directory`      | The directory to run dotnet commands in                                    | Yes      |                                       |
-| `use-trusted-publishing` | Use OIDC-based trusted publishing for nuget.org                            | No       | `true`                                |
-| `nuget-username`         | Your nuget.org username (required when `use-trusted-publishing` is `true`) | No       |                                       |
-| `nuget-auth-token`       | The NuGet auth token (required when `use-trusted-publishing` is `false`)   | No       |                                       |
-| `source-url`             | The source URL for the NuGet package feed                                  | No       | `https://api.nuget.org/v3/index.json` |
-| `dotnet-version`         | The version of dotnet to use                                               | No       | `10.0.x`                              |
-| `config-file`            | Custom nuget.config location                                               | No       | `nuget.config` (at root)              |
+| Name                     | Description                           | Required                                    | Default                               |
+|--------------------------|---------------------------------------|---------------------------------------------|---------------------------------------|
+| `working-directory`      | The directory to run dotnet commands in | Yes                                       |                                       |
+| `use-trusted-publishing` | Use OIDC-based trusted publishing for nuget.org | No                                | `true`                                |
+| `nuget-username`         | A nuget.org username with trusted publishing configured | Yes, when `use-trusted-publishing` is `true` |                                       |
+| `nuget-auth-token`       | The NuGet auth token                  | Yes, when `use-trusted-publishing` is `false` |                                      |
+| `source-url`             | The source URL for the NuGet package feed | No                                      | `https://api.nuget.org/v3/index.json` |
+| `dotnet-version`         | The version of dotnet to use          | No                                          | `10.0.x`                              |
+| `config-file`            | Custom nuget.config location          | No                                          | `nuget.config` (at root)              |
 
 ## Usage
 

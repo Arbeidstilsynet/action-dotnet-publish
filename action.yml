@@ -9,7 +9,7 @@ inputs:
     description: "Use OIDC-based trusted publishing for nuget.org. Requires 'permissions: id-token: write' on the job. Set to 'false' for authenticated publishing to other feeds."
     default: "true"
   nuget-username:
-    description: "Your nuget.org username. Required when use-trusted-publishing is 'true'."
+    description: "A nuget.org username with trusted publishing configured. Required when use-trusted-publishing is 'true'."
   nuget-auth-token:
     description: "The NuGet auth token. Required when use-trusted-publishing is 'false'."
   source-url:
