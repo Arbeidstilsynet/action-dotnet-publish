@@ -44,7 +44,7 @@ jobs:
 
 ### Authenticated publishing
 
-Publishes to a private feed (e.g. Azure Artifacts) using an API key. You must provide `source-url` for non-nuget.org feeds.
+Publishes to any feed (e.g. Azure Artifacts) using an API key. You must provide `source-url` for non-nuget.org feeds.
 
 ```yaml
 jobs:

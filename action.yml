@@ -67,4 +67,4 @@ runs:
       working-directory: ${{ inputs.working-directory }}
       run: |
         dotnet pack -c Release
-        dotnet nuget push "./bin/Release/*.nupkg" --source "${{ inputs.source-url }}"
+        dotnet nuget push "./bin/Release/*.nupkg" --api-key "${{ inputs.nuget-auth-token }}" --source "${{ inputs.source-url }}"
