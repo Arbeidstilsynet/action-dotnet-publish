@@ -27,7 +27,7 @@ runs:
     # --- Trusted publishing path ---
     - name: Setup .NET SDK (trusted publishing)
       if: inputs.use-trusted-publishing == 'true'
-      uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
+      uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
       with:
         dotnet-version: ${{ inputs.dotnet-version }}
         config-file: ${{ inputs.config-file }}
@@ -52,7 +52,7 @@ runs:
     # --- Authenticated publishing path ---
     - name: Setup .NET SDK (authenticated)
       if: inputs.use-trusted-publishing != 'true'
-      uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
+      uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
       with:
         dotnet-version: ${{ inputs.dotnet-version }}
         source-url: ${{ inputs.source-url }}
