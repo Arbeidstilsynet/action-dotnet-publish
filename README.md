@@ -18,7 +18,7 @@ A GitHub Action that packs and publishes a .NET package to a NuGet feed. Support
 | `nuget-auth-token`       | The NuGet auth token                  | Yes, when `use-trusted-publishing` is `false` |                                      |
 | `source-url`             | The source URL for the NuGet package feed | No                                      | `https://api.nuget.org/v3/index.json` |
 | `dotnet-version`         | The version of dotnet to use. Ignored when `global-json-file` is set | No                   | `10.0.x`                              |
-| `global-json-file`       | Path to a `global.json` to install the SDK version from, relative to the repository root (not `working-directory`) | No |              |
+| `global-json-file`       | Path to a `global.json` to install the SDK from, relative to the repository root (not `working-directory`). Only affects installation; see [SDK version from global.json](#sdk-version-from-globaljson) | No |              |
 | `config-file`            | Custom nuget.config location          | No                                          | `nuget.config` (at root)              |
 
 ## Usage
@@ -45,7 +45,12 @@ jobs:
 
 ### SDK version from global.json
 
-Set `global-json-file` to install the SDK version pinned in a `global.json` (including its `rollForward` policy) instead of `dotnet-version`. The path is relative to the repository root, not `working-directory`. When `global-json-file` is set, `dotnet-version` is ignored. Without it, the action keeps using `dotnet-version` and does not read any `global.json`.
+Set `global-json-file` to install the SDK version pinned in a `global.json` (including its `rollForward` policy) instead of `dotnet-version`. The path is relative to the repository root, not `working-directory`. When `global-json-file` is set, `dotnet-version` is ignored.
+
+This input only controls which SDK is **installed**. Which installed SDK `dotnet pack` **selects** is decided by the .NET CLI, which uses the nearest `global.json` in `working-directory` or one of its parent directories, regardless of this input:
+
+- Without `global-json-file`, a `global.json` above `working-directory` is still honoured by `dotnet pack`. If it pins an SDK that `dotnet-version` doesn't install, the pack step fails.
+- A `global-json-file` outside that directory chain installs its SDK, but `dotnet pack` won't select it because of that file. Point this input at the same `global.json` the CLI will discover.
 
 ```yaml
       - uses: Arbeidstilsynet/action-dotnet-publish@v3

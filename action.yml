@@ -19,7 +19,7 @@ inputs:
     description: "The version of dotnet to use. Ignored when 'global-json-file' is set."
     default: "10.0.x"
   global-json-file:
-    description: "Optional path to a global.json file to install the .NET SDK version from, relative to the repository root (not 'working-directory'). When set, 'dotnet-version' is ignored."
+    description: "Optional path to a global.json file to install the .NET SDK version from, relative to the repository root (not 'working-directory'). When set, 'dotnet-version' is ignored. This only controls installation; dotnet pack selects the SDK from the nearest global.json at or above 'working-directory'."
   config-file:
     description: "Optional NuGet.config location, if your NuGet.config isn't located in the root of the repo."
 
