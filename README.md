@@ -17,7 +17,8 @@ A GitHub Action that packs and publishes a .NET package to a NuGet feed. Support
 | `nuget-username`         | A nuget.org username with trusted publishing configured | Yes, when `use-trusted-publishing` is `true` |                                       |
 | `nuget-auth-token`       | The NuGet auth token                  | Yes, when `use-trusted-publishing` is `false` |                                      |
 | `source-url`             | The source URL for the NuGet package feed | No                                      | `https://api.nuget.org/v3/index.json` |
-| `dotnet-version`         | The version of dotnet to use          | No                                          | `10.0.x`                              |
+| `dotnet-version`         | The version of dotnet to use. Ignored when `global-json-file` is set | No                   | `10.0.x`                              |
+| `global-json-file`       | Path to a `global.json` to install the SDK version from, relative to the repository root (not `working-directory`) | No |              |
 | `config-file`            | Custom nuget.config location          | No                                          | `nuget.config` (at root)              |
 
 ## Usage
@@ -40,6 +41,18 @@ jobs:
         with:
           working-directory: ./src/YourProject
           nuget-username: ${{ vars.NUGET_BOT_USERNAME }}
+```
+
+### SDK version from global.json
+
+Set `global-json-file` to install the SDK version pinned in a `global.json` (including its `rollForward` policy) instead of `dotnet-version`. The path is relative to the repository root, not `working-directory`. When `global-json-file` is set, `dotnet-version` is ignored. Without it, the action keeps using `dotnet-version` and does not read any `global.json`.
+
+```yaml
+      - uses: Arbeidstilsynet/action-dotnet-publish@v3
+        with:
+          working-directory: ./src/YourProject
+          nuget-username: ${{ vars.NUGET_BOT_USERNAME }}
+          global-json-file: global.json
 ```
 
 ### Authenticated publishing
